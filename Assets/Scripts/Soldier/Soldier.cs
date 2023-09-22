@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Soldier : MonoBehaviour
 {
-    public bool followClicks = false;
+    public bool followClicks;
     public Vector2 targetLocation;
 
     private bool hasTarget = false;
@@ -14,7 +14,7 @@ public class Soldier : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Soldier who is" + (followClicks ? " not " : " ") + "following clicks");
+        Debug.Log("Soldier who is" + (followClicks ? " " : " not ") + "following clicks");
     }
 
     // Update is called once per frame
