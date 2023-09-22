@@ -11,20 +11,15 @@ public class FollowMouseClickStrategy : ISoldierStrategy
     public FollowMouseClickStrategy(Soldier soldier)
     {
         this.soldier = soldier;
-        moveTactic = null;
         reachedGoalTactic = new StandGuardTactic(soldier);
+        moveTactic = reachedGoalTactic;
     }
 
     public void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(soldier.name + " has a new target position: " + targetPosition);
-            moveTactic = new MoveToPositionTactic(soldier, targetPosition);
-        }
+        HandleInput();
 
-        if (moveTactic == null || HasReachedTargetPosition())
+        if (HasReachedTargetPosition())
         {
             reachedGoalTactic.Update();
         }
@@ -34,8 +29,18 @@ public class FollowMouseClickStrategy : ISoldierStrategy
         }
     }
 
+    private void HandleInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(soldier.name + " has a new target position: " + targetPosition);
+            moveTactic = new MoveToPositionTactic(soldier, targetPosition);
+        }
+    }
+
     private bool HasReachedTargetPosition()
     {
-        return (Vector2)soldier.transform.position == targetPosition;
+        return Vector2.Distance(soldier.transform.position, targetPosition) < 0.1f;
     }
 }
