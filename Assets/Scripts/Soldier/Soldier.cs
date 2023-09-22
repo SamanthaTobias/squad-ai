@@ -4,49 +4,51 @@ using UnityEngine;
 
 public class Soldier : MonoBehaviour
 {
-    public bool followClicks;
-    public Vector2 targetLocation;
+    public Vector2 TargetLocation { get; set; }
+    public bool HasTarget { get; set; }
     public string Name => "Unknown Soldier";
 
-    private bool hasTarget = false;
     private float speed = 10.0f;  // Constant speed
     private IWeapon weapon;
+    private ISoldierStrategy strategy;
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Soldier who is" + (followClicks ? " " : " not ") + "following clicks");
+        strategy = new FollowMouseClickStrategy();  // Initialize with the strategy you'd like to use
+        Debug.Log(Name + " initialized with strategy: " + strategy.GetType().Name);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (followClicks && Input.GetMouseButtonDown(0))
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            targetLocation = mousePos;
-            hasTarget = true;
-        }
+        // Use the strategy to handle input
+        strategy.HandleInput(this);
 
-        if (hasTarget)
+        if (HasTarget)
         {
-            if ((Vector2)transform.position != targetLocation)
+            // Update the Soldier's position
+            if ((Vector2)transform.position != TargetLocation)
             {
-                // Update rotation instantly
-                Vector2 direction = targetLocation - (Vector2)transform.position;
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;  // -90 to align with the up direction
-                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-                // Update position
-                transform.position = Vector2.MoveTowards(transform.position, targetLocation, speed * Time.deltaTime);
+                MoveTowardsTarget();
             }
             else
             {
-                hasTarget = false;
-                Debug.Log(this.Name + " found a weapon at the target location.");
-                EquipWeapon(new M1Garand());
+                HasTarget = false;
+
+                // Use the strategy to handle reaching the target
+                strategy.HandleTargetReached(this);
             }
         }
+    }
+
+    private void MoveTowardsTarget()
+    {
+        // Similar to your original code
+        Vector2 direction = TargetLocation - (Vector2)transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.position = Vector2.MoveTowards(transform.position, TargetLocation, speed * Time.deltaTime);
     }
 
     public void EquipWeapon(IWeapon weapon)
