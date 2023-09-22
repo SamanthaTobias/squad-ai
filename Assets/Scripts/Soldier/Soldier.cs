@@ -8,8 +8,7 @@ public class Soldier : MonoBehaviour
     public Vector2 targetLocation;
 
     private bool hasTarget = false;
-    private float speed = 0.0f;
-    private float speedMax = 10.0f;
+    private float speed = 10.0f;  // Constant speed
 
     // Start is called before the first frame update
     void Start()
@@ -31,16 +30,16 @@ public class Soldier : MonoBehaviour
         {
             if ((Vector2)transform.position != targetLocation)
             {
-                if (speed < speedMax)
-                {
-                    speed = Mathf.Lerp(speed, speedMax, Time.deltaTime);
-                }
+                // Update rotation instantly
+                Vector2 direction = targetLocation - (Vector2)transform.position;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;  // -90 to align with the up direction
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
+                // Update position
                 transform.position = Vector2.MoveTowards(transform.position, targetLocation, speed * Time.deltaTime);
             }
             else
             {
-                speed = 0.0f;
                 hasTarget = false;
             }
         }
