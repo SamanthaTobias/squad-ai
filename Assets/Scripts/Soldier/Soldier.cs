@@ -6,9 +6,11 @@ public class Soldier : MonoBehaviour
 {
     public bool followClicks;
     public Vector2 targetLocation;
+    public string Name => "Unknown Soldier";
 
     private bool hasTarget = false;
     private float speed = 10.0f;  // Constant speed
+    private IWeapon weapon;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +43,19 @@ public class Soldier : MonoBehaviour
             else
             {
                 hasTarget = false;
+                Debug.Log(this.Name + " found a weapon at the target location.");
+                EquipWeapon(new M1Garand());
             }
         }
+    }
+
+    public void EquipWeapon(IWeapon weapon)
+    {
+        if (this.weapon != null)
+        {
+            Debug.Log(this.Name + " throws his " + this.weapon.Name + " into the void.");
+        }
+        this.weapon = weapon;
+        Debug.Log(this.Name + " equips a " + weapon.Name);
     }
 }
