@@ -2,19 +2,40 @@ using UnityEngine;
 
 public class FollowMouseClickStrategy : ISoldierStrategy
 {
-    public void HandleInput(Soldier soldier)
+    private readonly Soldier soldier;
+
+    private Vector2 targetPosition;
+    private ISoldierTactic moveTactic;
+    private readonly ISoldierTactic reachedGoalTactic;
+
+    public FollowMouseClickStrategy(Soldier soldier)
+    {
+        this.soldier = soldier;
+        moveTactic = null;
+        reachedGoalTactic = new StandGuardTactic(soldier);
+    }
+
+    public void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            soldier.TargetLocation = mousePos;
-            soldier.HasTarget = true;
+            targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(soldier.name + " has a new target position: " + targetPosition);
+            moveTactic = new MoveToPositionTactic(soldier, targetPosition);
+        }
+
+        if (moveTactic == null || HasReachedTargetPosition())
+        {
+            reachedGoalTactic.Update();
+        }
+        else
+        {
+            moveTactic.Update();
         }
     }
 
-    public void HandleTargetReached(Soldier soldier)
+    private bool HasReachedTargetPosition()
     {
-        Debug.Log(soldier.Name + " found a weapon at the target location.");
-        soldier.EquipWeapon(new M1Garand());
+        return (Vector2)soldier.transform.position == targetPosition;
     }
 }
