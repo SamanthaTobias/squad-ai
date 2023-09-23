@@ -19,5 +19,7 @@ public class FPSCounter : MonoBehaviour
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
         float fps = 1.0f / deltaTime;
         fpsText.text = "FPS: " + Mathf.Ceil(fps).ToString();
+
+        Debug.Log("updated fps counter text to " + fpsText.text);
     }
 }
