@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 public class PrefabTest : MonoBehaviour
 {
     public GameObject soldierPrefab;
+    public GameObject treePrefab;
+
     private readonly float minX = -5f;
     private readonly float maxX = 5f;
     private readonly float minY = -5f;
@@ -16,10 +18,13 @@ public class PrefabTest : MonoBehaviour
     void Start()
     {
         Debug.Log("Running PrefabTest Start");
-        // Spawn 10 soldiers
         for (int i = 0; i < 12; i++)
         {
             PlaceObjectRandom(soldierPrefab, minX, maxX, minY, maxY, 100);
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            PlaceObjectRandom(treePrefab, minX, maxX, minY, maxY, 100);
         }
     }
 
