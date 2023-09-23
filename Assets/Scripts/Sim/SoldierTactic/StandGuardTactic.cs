@@ -16,7 +16,7 @@ public class StandGuardTactic : ISoldierTactic
     {
         timer += Time.deltaTime;
 
-        if (timer >= nextRotationTime)
+        if (timer >= nextRotationTime && false)
         {
             // Randomly decide the direction of rotation
             int direction = Random.Range(0, 2) == 0 ? 1 : -1;

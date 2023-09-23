@@ -41,6 +41,6 @@ public class FollowMouseClickStrategy : ISoldierStrategy
 
     private bool HasReachedTargetPosition()
     {
-        return Vector2.Distance(soldier.transform.position, targetPosition) < 0.1f;
+        return Vector2.Distance(soldier.transform.position, targetPosition) < 1f;
     }
 }
